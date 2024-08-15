@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/firstFragment">
+
+    <fragment
+        android:id="@+id/firstFragment"
+        android:name="com.genesiseternity.daggerbottomsheetnav.presentation.FirstFragment"
+        android:label="fragment_first"
+        tools:layout="@layout/fragment_first" >
+        <action
+            android:id="@+id/action_firstFragment_to_secondBottomSheetFragment"
+            app:destination="@id/secondBottomSheetFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/secondBottomSheetFragment"
+        android:name="com.genesiseternity.daggerbottomsheetnav.presentation.SecondBottomSheetFragment"
+        android:label="fragment_second_bottom_sheet"
+        tools:layout="@layout/fragment_second_bottom_sheet" >
+        <action
+            android:id="@+id/action_secondBottomSheetFragment_to_firstFragment"
+            app:destination="@id/firstFragment" />
+        <argument
+            android:name="value"
+            app:argType="string"
+            app:nullable="true" />
+    </dialog>
+</navigation>

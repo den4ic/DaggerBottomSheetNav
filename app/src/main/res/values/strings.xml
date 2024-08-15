@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DaggerBottomSheetNav</string>
+    <string name="open_bottom_fragment">Open bottom fragment</string>
+    <string name="second_fragment">Second fragment</string>
+    <string name="first_fragment">First fragment</string>
+    <string name="total_value">Total value:</string>
+</resources>
