@@ -4,4 +4,4 @@ Data transfer between a Fragment and a BottomSheetDialogFragment can be effectiv
 
 ## Example screen
 
-<img src="https://github.com/den4ic/DaggerBottomSheetNav/blob/main/screen/Screenshot_20240815_221600.png" width="600" />
+<img src="https://github.com/den4ic/DaggerBottomSheetNav/blob/main/screen/Screenshot_20240815_221600.png" width="300" />
