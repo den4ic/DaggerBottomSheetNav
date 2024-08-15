@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.guideline.daggerbottomsheetnav.R
 import com.guideline.daggerbottomsheetnav.databinding.FragmentFirstBinding
 import com.guideline.daggerbottomsheetnav.di.ViewModelProviderFactory
 import com.guideline.daggerbottomsheetnav.utils.NavConstants.KEY
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FirstFragment : DaggerFragment() {
@@ -36,6 +40,7 @@ class FirstFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupListeners()
         observeBackStack()
+        observeViewModel()
     }
 
     private fun setupListeners() {
@@ -45,7 +50,7 @@ class FirstFragment : DaggerFragment() {
     private fun observeBackStack() {
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(KEY)
             ?.observe(viewLifecycleOwner) { value ->
-                binding.tvValue.text = value
+                viewModel.updateValue(value)
             }
     }
 
@@ -57,6 +62,16 @@ class FirstFragment : DaggerFragment() {
                 value = binding.tvValue.text.toString()
             )
             navController.navigate(action)
+        }
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.value.collect { value ->
+                    binding.tvValue.text = value
+                }
+            }
         }
     }
 

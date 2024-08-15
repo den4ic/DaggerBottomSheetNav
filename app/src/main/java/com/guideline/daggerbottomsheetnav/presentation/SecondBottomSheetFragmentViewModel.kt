@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.guideline.daggerbottomsheetnav.utils.Operation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class SecondBottomSheetFragmentViewModel @Inject constructor(
@@ -13,7 +14,7 @@ class SecondBottomSheetFragmentViewModel @Inject constructor(
     private val TAG = this::class.java.simpleName
 
     private val _totalValue = MutableStateFlow(0)
-    val totalValue: StateFlow<Int> get() = _totalValue
+    val totalValue: StateFlow<Int> get() = _totalValue.asStateFlow()
 
     fun presetValue(value: Int) {
         _totalValue.value = value

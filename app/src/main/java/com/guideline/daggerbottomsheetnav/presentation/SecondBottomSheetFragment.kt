@@ -1,5 +1,7 @@
 package com.guideline.daggerbottomsheetnav.presentation
 
+import android.app.Dialog
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.guideline.daggerbottomsheetnav.core.DaggerBottomSheetDialogFragment
 import com.guideline.daggerbottomsheetnav.databinding.FragmentSecondBottomSheetBinding
 import com.guideline.daggerbottomsheetnav.di.ViewModelProviderFactory
@@ -19,7 +23,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SecondBottomSheetFragment : DaggerBottomSheetDialogFragment() {
-
     private var _binding: FragmentSecondBottomSheetBinding? = null
     private val binding get() = _binding!!
 
@@ -41,9 +44,24 @@ class SecondBottomSheetFragment : DaggerBottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        checkConfigurationAndDismiss()
+
         initArgs()
         setupListeners()
         observeViewModel()
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = BottomSheetDialog(requireContext(), theme)
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        return dialog
+    }
+
+    private fun checkConfigurationAndDismiss() {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            findNavController().popBackStack()
+        }
     }
 
     private fun setupListeners() {
