@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/firstFragment"
-        android:name="com.genesiseternity.daggerbottomsheetnav.presentation.FirstFragment"
+        android:name="com.guideline.daggerbottomsheetnav.presentation.FirstFragment"
         android:label="fragment_first"
         tools:layout="@layout/fragment_first" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <dialog
         android:id="@+id/secondBottomSheetFragment"
-        android:name="com.genesiseternity.daggerbottomsheetnav.presentation.SecondBottomSheetFragment"
+        android:name="com.guideline.daggerbottomsheetnav.presentation.SecondBottomSheetFragment"
         android:label="fragment_second_bottom_sheet"
         tools:layout="@layout/fragment_second_bottom_sheet" >
         <action

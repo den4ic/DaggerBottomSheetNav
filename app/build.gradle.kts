@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.genesiseternity.daggerbottomsheetnav"
+    namespace = "com.guideline.daggerbottomsheetnav"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.genesiseternity.daggerbottomsheetnav"
+        applicationId = "com.guideline.daggerbottomsheetnav"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
