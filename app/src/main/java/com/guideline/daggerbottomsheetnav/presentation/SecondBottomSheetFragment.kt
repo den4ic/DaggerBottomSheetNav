@@ -44,9 +44,7 @@ class SecondBottomSheetFragment : DaggerBottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         checkConfigurationAndDismiss()
-
         initArgs()
         setupListeners()
         observeViewModel()

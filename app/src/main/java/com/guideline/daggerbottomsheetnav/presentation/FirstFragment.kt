@@ -1,6 +1,7 @@
 package com.guideline.daggerbottomsheetnav.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,15 @@ import com.guideline.daggerbottomsheetnav.databinding.FragmentFirstBinding
 import com.guideline.daggerbottomsheetnav.di.ViewModelProviderFactory
 import com.guideline.daggerbottomsheetnav.utils.NavConstants.KEY
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,19 +49,11 @@ class FirstFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupListeners()
-        observeBackStack()
-        observeViewModel()
+        observeFlows()
     }
 
     private fun setupListeners() {
         binding.btnOpenBottomFragment.setOnClickListener { openBottomFragment() }
-    }
-
-    private fun observeBackStack() {
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(KEY)
-            ?.observe(viewLifecycleOwner) { value ->
-                viewModel.updateValue(value)
-            }
     }
 
     private fun openBottomFragment() {
@@ -65,13 +67,30 @@ class FirstFragment : DaggerFragment() {
         }
     }
 
-    private fun observeViewModel() {
+    private fun observeFlows() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.value.collect { value ->
-                    binding.tvValue.text = value
-                }
+                launch { observeBackStack() }
+                launch { observeViewModel() }
             }
+        }
+    }
+
+    private suspend fun observeBackStack() {
+        findNavController().currentBackStackEntryFlow
+            .distinctUntilChanged()
+            .collect { backStackEntry ->
+                backStackEntry.savedStateHandle.getStateFlow(KEY, "")
+                    .filter { it.isNotEmpty() }
+                    .collect { value ->
+                        viewModel.updateValue(value)
+                    }
+            }
+    }
+
+    private suspend fun observeViewModel() {
+        viewModel.value.collect { value ->
+            binding.tvValue.text = value
         }
     }
 
