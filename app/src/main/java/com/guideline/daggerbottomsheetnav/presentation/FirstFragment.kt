@@ -49,7 +49,8 @@ class FirstFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupListeners()
-        observeFlows()
+        observeBackStack()
+        observeViewModel()
     }
 
     private fun setupListeners() {
@@ -67,30 +68,27 @@ class FirstFragment : DaggerFragment() {
         }
     }
 
-    private fun observeFlows() {
+    private fun observeBackStack() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { observeBackStack() }
-                launch { observeViewModel() }
-            }
+            findNavController().currentBackStackEntryFlow
+                .distinctUntilChanged()
+                .collect { backStackEntry ->
+                    backStackEntry.savedStateHandle.getStateFlow(KEY, "")
+                        .filter { it.isNotEmpty() }
+                        .collect { value ->
+                            viewModel.updateValue(value)
+                        }
+                }
         }
     }
 
-    private suspend fun observeBackStack() {
-        findNavController().currentBackStackEntryFlow
-            .distinctUntilChanged()
-            .collect { backStackEntry ->
-                backStackEntry.savedStateHandle.getStateFlow(KEY, "")
-                    .filter { it.isNotEmpty() }
-                    .collect { value ->
-                        viewModel.updateValue(value)
-                    }
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.value.collect { value ->
+                    binding.tvValue.text = value
+                }
             }
-    }
-
-    private suspend fun observeViewModel() {
-        viewModel.value.collect { value ->
-            binding.tvValue.text = value
         }
     }
 
